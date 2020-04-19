@@ -18,7 +18,7 @@ import { Card, CardImg, CardTitle, CardBody, CardText } from 'reactstrap';
             <div>
                 {dish.comments.map(review=>{
                     return(
-                        <ul className='list-unstyled'>
+                        <ul key={review.id} className='list-unstyled'>
                             <li>{review.comment}</li>
                             <li>--{review.author}, {new Intl.DateTimeFormat('en-US', {year: 'numeric', month:'short', day:'2-digit'}).format(new Date(Date.parse(review.date)))}</li>
                         </ul>
