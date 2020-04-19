@@ -1,15 +1,19 @@
 import React from 'react';
-import { Card, CardImg, CardImgOverlay, CardTitle, CardBody, CardText } from 'reactstrap';
+import { Card, CardImg, CardTitle, CardBody, CardText } from 'reactstrap';
 
-class DishDetail extends React.Component {
-    constructor(props) {
-        super(props);
-        this.renderComments=this.renderComments.bind(this)
-        this.state = {
 
-        }
+    function RenderDish({dish}) {
+        return(
+            <Card>
+                <CardImg width='100%' src={dish.image} alt={dish.name} />
+                <CardBody>
+                    <CardTitle>{dish.name}</CardTitle>
+                    <CardText>{dish.description}</CardText>
+                </CardBody>
+            </Card>
+        )
     }
-    renderComments(dish) {
+    function RenderComments({dish}) {
         return(
             <div>
                 {dish.comments.map(review=>{
@@ -23,28 +27,24 @@ class DishDetail extends React.Component {
             </div>
         )
     }
-    render() {
-        console.log(this.props)
+    const DishDetail = (props) => {
+        if(props.dish) {
+        // console.log(props)
         return(
             <div className='container'>
-            <div className='row'>
-                <div className='col-12 col-md-5 m-1'>
-                    <Card>
-                        <CardImg width='100%' src={this.props.dish.image} alt={this.props.dish.name} />
-                        <CardBody>
-                            <CardTitle>{this.props.dish.name}</CardTitle>
-                            <CardText>{this.props.dish.description}</CardText>
-                        </CardBody>
-                    </Card>
+                <div className='row'>
+                    <div className='col-12 col-md-5 m-1'>
+                        <RenderDish dish={props.dish} />
+                    </div>
+                    <div className='col-12 col-md-5 m-1'>
+                        <h1>Comments</h1>
+                        <RenderComments dish={props.dish} />
+                    </div>
                 </div>
-                <div className='col-12 col-md-5 m-1'>
-                    <h1>Comments</h1>
-                    {this.renderComments(this.props.dish)}
-                </div>
-            </div>
             </div>
         )
+        // eslint-disable-next-line no-unused-expressions
+        }else{<div></div>}
     }
-}
 
 export default DishDetail;
