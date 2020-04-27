@@ -15,7 +15,22 @@ import { LocalForm, Control, Errors } from 'react-redux-form';
             </Card>
         )
     }
-    function RenderComments({dish}) {
+    function RenderComments({dish, addComment, dishId}) {
+        const required = (val)=> val && val.length;
+        const maxLength = len => val => !val || val.length <= len;
+        const minLength = len => val => val && val.length >= len;
+        const [isOpen, setIsOpen] = useState(false)
+
+
+        function handleSubmit(e) {
+                const date = new Date().toISOString()
+                console.log(date)
+                setIsOpen(!isOpen);
+                addComment(dishId, e.rating, e.name, e.comment);  
+        }
+
+
+
         console.log(dish)
         return(
             <div>
@@ -27,47 +42,13 @@ import { LocalForm, Control, Errors } from 'react-redux-form';
                         </ul>
                     )
                 })}
-            </div>
-        )
-    }
-    const DishDetail = (props) => {
-        
-        const required = (val)=> val && val.length;
-        const maxLength = len => val => !val || val.length <= len;
-        const minLength = len => val => val && val.length >= len;
-
-        const [isOpen, setIsOpen] = useState(false)
-        if(props.dish) {
-        // console.log(props)
-        return(
-            <div className='container'>
-                <div className='row'>
-                    <Breadcrumb>
-                        <BreadcrumbItem><Link to='/Home'>Home</Link></BreadcrumbItem>
-                        <BreadcrumbItem><Link to='/Menu'>Menu</Link></BreadcrumbItem>
-                        <BreadcrumbItem active><Link>{props.dish.name}</Link></BreadcrumbItem>
-                    </Breadcrumb>
-                    <div className='col-12'>
-                        <h3>{props.dish.name}</h3>
-                        <hr />
-                    </div>
-                </div>
-                <div className='row'>
-                    <div className='col-12 col-md-5 m-1'>
-                        <RenderDish dish={props.dish} />
-                    </div>
-                    <div className='col-12 col-md-5 m-1'>
-                        <h1>Comments</h1>
-                        <RenderComments dish={props.comments} />
-                        <Button outline onClick={()=>setIsOpen(!isOpen)} >
-                            <i className="fas fa-pencil-alt"></i> Add Comment
-                        </Button>
-                    </div>
-                </div>
+                <Button outline onClick={()=>setIsOpen(!isOpen)} >
+                    <i className="fas fa-pencil-alt"></i> Add Comment
+                </Button>
             <Modal isOpen={isOpen} toggle={()=>setIsOpen(!isOpen)}>
                 <ModalHeader>Submit Comment</ModalHeader>
                 <ModalBody>
-                    <LocalForm>
+                    <LocalForm onSubmit={values=>handleSubmit(values)}>
                         <Row className='col-12'>
                             <Label htmlFor='rating' md={12}>Rating</Label>
                             <Col md={12}>
@@ -133,6 +114,39 @@ import { LocalForm, Control, Errors } from 'react-redux-form';
                     </LocalForm>
                 </ModalBody>
             </Modal>
+            </div>
+        )
+    }
+    const DishDetail = (props) => {
+        
+
+        if(props.dish) {
+        // console.log(props)
+        return(
+            <div className='container'>
+                <div className='row'>
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to='/Home'>Home</Link></BreadcrumbItem>
+                        <BreadcrumbItem><Link to='/Menu'>Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active><Link>{props.dish.name}</Link></BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className='col-12'>
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-12 col-md-5 m-1'>
+                        <RenderDish dish={props.dish} />
+                    </div>
+                    <div className='col-12 col-md-5 m-1'>
+                        <h1>Comments</h1>
+                        <RenderComments dish={props.comments}
+                                        addComment={props.addComment}
+                                        dishId={props.dish.id}
+                        />
+                    </div>
+                </div>
             </div>
 
         )
