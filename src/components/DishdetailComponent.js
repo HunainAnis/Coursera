@@ -1,6 +1,7 @@
-import React from 'react';
-import { Card, CardImg, CardTitle, CardBody, CardText, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import React, { useState } from 'react';
+import { Card, CardImg, CardTitle, CardBody, CardText, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Row, Label, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { LocalForm, Control, Errors } from 'react-redux-form';
 
 
     function RenderDish({dish}) {
@@ -30,6 +31,12 @@ import { Link } from 'react-router-dom';
         )
     }
     const DishDetail = (props) => {
+        
+        const required = (val)=> val && val.length;
+        const maxLength = len => val => !val || val.length <= len;
+        const minLength = len => val => val && val.length >= len;
+
+        const [isOpen, setIsOpen] = useState(false)
         if(props.dish) {
         // console.log(props)
         return(
@@ -52,9 +59,82 @@ import { Link } from 'react-router-dom';
                     <div className='col-12 col-md-5 m-1'>
                         <h1>Comments</h1>
                         <RenderComments dish={props.comments} />
+                        <Button outline onClick={()=>setIsOpen(!isOpen)} >
+                            <i className="fas fa-pencil-alt"></i> Add Comment
+                        </Button>
                     </div>
                 </div>
+            <Modal isOpen={isOpen} toggle={()=>setIsOpen(!isOpen)}>
+                <ModalHeader>Submit Comment</ModalHeader>
+                <ModalBody>
+                    <LocalForm>
+                        <Row className='col-12'>
+                            <Label htmlFor='rating' md={12}>Rating</Label>
+                            <Col md={12}>
+                                <Control.select model='.rating' name='rating'
+                                className='form-control'
+                                validators={{
+                                    required
+                                }}
+                                >
+                                    <option value='1'>1</option>
+                                    <option value='2'>2</option>
+                                    <option value='3'>3</option>
+                                    <option value='4'>4</option>
+                                    <option value='5'>5</option>
+                                </Control.select>
+                                <Errors
+                                    className='text-danger'
+                                    model='.rating'
+                                    show='touched'
+                                    messages={{
+                                        required:'Required'
+                                    }}
+                                />
+                            </Col>
+                        </Row>
+                        <Row className='col-12'>
+                            <Label htmlFor='name' md={12}>Your Name</Label>
+                            <Col md={12}>
+                                <Control.text model='.name' name='name'
+                                                className='form-control'
+                                                placeholder='Your Name'
+                                                validators={{
+                                                    required,
+                                                    minLength: minLength(3),
+                                                    maxLength: maxLength(15)
+                                                }}
+                                                />
+                                <Errors
+                                    className='text-danger'
+                                    model='.name'
+                                    show='touched'
+                                    messages={{
+                                        required:'Required',
+                                        minLength: 'Must be greater than 2 characters',
+                                        maxLength: 'Must be 15 or less characters'
+                                    }}
+                                />
+                            </Col>
+                        </Row>
+                        <Row className='col-12'>
+                            <Label htmlFor='comment' md={12}>Comment</Label>
+                            <Col md={12}>
+                                <Control.textarea model='.comment' name='comment'
+                                                    className='form-control'
+                                                    rows='12' />
+                            </Col>
+                        </Row>
+                        <Row className='col-12'>
+                            <Col md={12}>
+                                <Button type='submit' color='primary'>Submit</Button>
+                            </Col>
+                        </Row>
+                    </LocalForm>
+                </ModalBody>
+            </Modal>
             </div>
+
         )
         // eslint-disable-next-line no-unused-expressions
         }
