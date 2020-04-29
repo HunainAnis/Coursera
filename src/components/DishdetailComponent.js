@@ -43,7 +43,7 @@ import { LocalForm, Control, Errors } from 'react-redux-form';
                     )
                 })}
                 <Button outline onClick={()=>setIsOpen(!isOpen)} >
-                    <i className="fas fa-pencil-alt"></i> Add Comment
+                    <span className="fa fa-pencil"></span> Add Comment
                 </Button>
             <Modal isOpen={isOpen} toggle={()=>setIsOpen(!isOpen)}>
                 <ModalHeader>Submit Comment</ModalHeader>
@@ -128,7 +128,7 @@ import { LocalForm, Control, Errors } from 'react-redux-form';
                     <Breadcrumb>
                         <BreadcrumbItem><Link to='/Home'>Home</Link></BreadcrumbItem>
                         <BreadcrumbItem><Link to='/Menu'>Menu</Link></BreadcrumbItem>
-                        <BreadcrumbItem active><Link>{props.dish.name}</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
                     </Breadcrumb>
                     <div className='col-12'>
                         <h3>{props.dish.name}</h3>
